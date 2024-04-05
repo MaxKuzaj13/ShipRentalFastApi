@@ -1,8 +1,8 @@
 from fastapi import APIRouter
 from fastapi import HTTPException, Path
-from pydantic import BaseModel
-from typing import List, Dict, Optional
+from typing import Dict
 
+from schemas.ships import Starship
 
 router = APIRouter(prefix='/starships', tags=['starships'])
 
@@ -15,10 +15,6 @@ starships_db = {
     3: {"name": "Star Destroyer", "price_per_hour": 5000, "available": False},
 }
 
-class Starship(BaseModel):
-    name: str
-    price_per_hour: float
-    available: bool
 
 
 
