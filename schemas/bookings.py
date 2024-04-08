@@ -1,13 +1,15 @@
-from pydantic import BaseModel, model_validator, PositiveInt, validator, root_validator
+from pydantic import BaseModel, PositiveInt, root_validator
 from typing import Optional
 from datetime import datetime
+
 
 class BookingsSchema(BaseModel):
     id: Optional[PositiveInt]
     spaceship_id: PositiveInt
-    customer_id:PositiveInt
+    customer_id: PositiveInt
     date_start: datetime
     date_end: datetime
+
     @root_validator(skip_on_failure=True)
     def validate_dates(cls, values):
         """

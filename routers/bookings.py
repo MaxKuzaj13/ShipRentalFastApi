@@ -23,9 +23,9 @@ async def list_bookings() -> BookingsSchema:
 async def get_bookings(bookings_id: int = Path(..., title="The ID of the bookings to get")):
     if bookings_id not in bookings_db:
         raise HTTPException(status_code=404, detail="Starship not found")
-    customer_data = bookings_db[bookings_id]
-    customer_data["id"] = bookings_id
-    return customer_data
+    bookings_data = bookings_db[bookings_id]
+    bookings_data["id"] = bookings_id
+    return bookings_data
 
 
 @router.post("/", response_model=BookingsSchema, status_code=201)
