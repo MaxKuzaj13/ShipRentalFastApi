@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from routers import ships, customers, bookings
+from routers import ships, customers, bookings, attachments
 
 
 app = FastAPI()
@@ -8,3 +8,4 @@ app = FastAPI()
 app.include_router(ships.router)
 app.include_router(customers.router)
 app.include_router(bookings.router)
+app.include_router(attachments.router)
