@@ -33,8 +33,8 @@ async def db_session_middleware(request: Request, call_next):
     try:
         request.state.db = SessionLocal()
         response = await call_next(request)
-    except Exception as e:
-        response = Response(f"Not implemented: {e}", status_code=501)
+    # except Exception as e:
+    #     response = Response(f"Not implemented: {e}", status_code=501)
     finally:
         request.state.db.close()
     return response
