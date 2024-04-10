@@ -8,6 +8,9 @@ class SpaceshipSchemaReceived(BaseModel):
     max_speed: PositiveInt
     max_range: PositiveInt
 
+    class Config:
+        from_attributes = True
+
 
 class SpaceshipSchemaStored(BaseModel):
     name: str = Field(min_length=5, max_length=255)
@@ -16,3 +19,6 @@ class SpaceshipSchemaStored(BaseModel):
     id: PositiveInt
     max_speed: PositiveInt
     max_range: PositiveInt
+
+    class Config:
+        from_attributes = True
