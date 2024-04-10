@@ -12,7 +12,7 @@ class CustomerSchemaReceived(BaseModel):
     def validate_id_number(cls, id_number: str) -> str:
         """
         Validator for polish id numbers
-        :param id_numbber: str
+        :param id_number: str
         :return: str
         """
         check_numbers = [7, 3, 1, 7, 3, 1, 7, 3]
