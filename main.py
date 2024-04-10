@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Request, APIRouter, Response
-from routers import ships_orm, customers, bookings, attachments
+from routers import ships_orm, customers_orm, bookings_orm, attachments
 
 from db import engine
 from sqlalchemy.orm import sessionmaker
@@ -11,8 +11,8 @@ SessionLocal = sessionmaker(autoflush=False, autocommit=False, bind=engine)
 
 # Include routers from ships, customers, bookings
 app.include_router(ships_orm.router)
-app.include_router(customers.router)
-app.include_router(bookings.router)
+app.include_router(customers_orm.router)
+app.include_router(bookings_orm.router)
 app.include_router(attachments.router)
 
 @app.middleware("http")

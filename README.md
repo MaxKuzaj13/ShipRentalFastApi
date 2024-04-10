@@ -76,3 +76,4 @@ after that you can make migration using command
         
         alembic upgrade head
 
+4.If you have any change of schema you need make revision and upgrade like on previous point 

@@ -3,8 +3,7 @@ from typing import Optional
 from string import ascii_uppercase
 
 
-class CustomerSchema(BaseModel):
-    id: Optional[PositiveInt]
+class CustomerSchemaReceived(BaseModel):
     name: str = Field(min_length=5, max_length=255)
     address: str = Field(min_length=5, max_length=255)
     document_number: str = Field(min_length=9, max_length=9)
@@ -23,3 +22,18 @@ class CustomerSchema(BaseModel):
         if sum_control % 10 != control_number:
             raise ValueError("Document number is not valid")
         return id_number
+
+    class Config:
+        from_attributes = True
+
+
+class CustomerSchemaStored(BaseModel):
+    id: Optional[PositiveInt]
+    name: str = Field(min_length=5, max_length=255)
+    address: str = Field(min_length=5, max_length=255)
+    document_number: str = Field(min_length=9, max_length=9)
+
+    # Validator skipped it is checked on receiving stage
+
+    class Config:
+        from_attributes = True

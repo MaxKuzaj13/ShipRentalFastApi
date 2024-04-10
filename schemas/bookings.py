@@ -1,10 +1,8 @@
 from pydantic import BaseModel, PositiveInt, root_validator
-from typing import Optional
 from datetime import datetime
 
 
-class BookingsSchema(BaseModel):
-    id: Optional[PositiveInt]
+class BookingsSchemaReceived(BaseModel):
     spaceship_id: PositiveInt
     customer_id: PositiveInt
     date_start: datetime
@@ -20,3 +18,18 @@ class BookingsSchema(BaseModel):
         if values.get('date_end') < values.get('date_start'):
             raise ValueError('date_end should be greater then date_start')
         return values
+
+    class Config:
+        from_attributes = True
+
+
+class BookingsSchemaStored(BaseModel):
+    id: PositiveInt
+    spaceship_id: PositiveInt
+    customer_id: PositiveInt
+    date_start: datetime
+    date_end: datetime
+
+    # Root validator skipped it is checked on receiving stage
+    class Config:
+        from_attributes = True
