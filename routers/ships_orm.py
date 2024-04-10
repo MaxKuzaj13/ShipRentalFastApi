@@ -4,7 +4,7 @@ from typing import Dict, List
 
 
 from db import get_db
-from repositories.ships import create, fetch_one, delete_one, fetch_all, update_one
+from repositories.ships import ship_repo
 from schemas.ships import SpaceshipSchemaReceived, SpaceshipSchemaStored
 
 router = APIRouter(prefix='/spaceships', tags=['spaceships'])
@@ -12,7 +12,7 @@ router = APIRouter(prefix='/spaceships', tags=['spaceships'])
 
 @router.get("/{spaceship_id}", response_model=SpaceshipSchemaStored, status_code=200)
 async def get(spaceship_id: int, db: Session = Depends(get_db)):
-    ships = fetch_one(db=db, spaceship_id=spaceship_id)
+    ships = ship_repo.fetch_one(db=db, spaceship_id=spaceship_id)
     if not ships:
         raise HTTPException(status_code=404, detail="Spaceship not found")
     return ships
@@ -20,7 +20,7 @@ async def get(spaceship_id: int, db: Session = Depends(get_db)):
 
 @router.post("/", response_model=SpaceshipSchemaStored, status_code=201)
 async def add(spaceship: SpaceshipSchemaReceived, db: Session = Depends(get_db)):
-    ship = create(
+    ship = ship_repo.create(
         db=db,
         name=spaceship.name,
         available=True,
@@ -33,7 +33,7 @@ async def add(spaceship: SpaceshipSchemaReceived, db: Session = Depends(get_db))
 
 @router.delete("/{spaceship_id}", response_model=SpaceshipSchemaStored)
 async def delete_spaceship(spaceship_id: int, db: Session = Depends(get_db)):
-    ship_deleted = delete_one(db, spaceship_id)
+    ship_deleted = ship_repo.delete_one(db, spaceship_id)
     if not ship_deleted:
         raise HTTPException(status_code=404, detail="Spaceship not found")
     return ship_deleted
@@ -41,7 +41,7 @@ async def delete_spaceship(spaceship_id: int, db: Session = Depends(get_db)):
 
 @router.get("/", response_model=List[SpaceshipSchemaStored],  status_code=200)
 async def get_all(db: Session = Depends(get_db)):
-    ships = fetch_all(db=db)
+    ships = ship_repo.fetch_all(db=db)
     if not ships:
         raise HTTPException(status_code=404, detail="Spaceship not found")
     return ships
@@ -49,7 +49,7 @@ async def get_all(db: Session = Depends(get_db)):
 
 @router.put("/{spaceship_id}", response_model=SpaceshipSchemaStored)
 async def update_one_spaceship(spaceship_id: int, spaceship: SpaceshipSchemaReceived, db: Session = Depends(get_db)):
-    ships = update_one(db=db, spaceship_id=spaceship_id, **spaceship.dict())
+    ships = ship_repo.update_one(db=db, spaceship_id=spaceship_id, **spaceship.dict())
     if not ships:
         raise HTTPException(status_code=404, detail="Spaceship not found")
     return ships
