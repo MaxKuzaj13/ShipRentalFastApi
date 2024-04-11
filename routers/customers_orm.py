@@ -1,6 +1,6 @@
 from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 
@@ -31,8 +31,24 @@ async def create_customer(customer: CustomerSchemaReceived, db: Session = Depend
 
 
 @router.get("/", response_model=List[CustomerSchemaStored], status_code=200)
-async def list_customers(db: Session = Depends(get_db)):
-    customers = customers_repo.fetch_all(db=db)
+async def list_customers(
+    db: Session = Depends(get_db),
+    page: int = Query(1, ge=1, description="Page number for pagination"),
+    limit: int = Query(10, le=10000, description="Number of items per page")
+    ):
+    """
+    Endpoint to list all customers with pagination and offset support.
+
+    Args:
+        db (Session, optional): Database session. Defaults to Depends(get_db).
+        page (int, optional): Page number for pagination. Defaults to 1.
+        limit (int, optional): Number of items per page. Defaults to 10.
+
+    Returns:
+        List[CustomerSchemaStored]: List of customers.
+    """
+    offset = (page - 1) * limit
+    customers = customers_repo.fetch_all(db=db, offset=offset, limit=limit)
     if not customers:
         raise HTTPException(status_code=404, detail="Customers not found")
     return customers

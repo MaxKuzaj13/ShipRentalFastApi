@@ -63,7 +63,7 @@ class Repository(Generic[ModelType]):
         else:
             return None
 
-    def fetch_all(self, db: Session) -> List[ModelType]:
+    def fetch_all(self, db: Session, offset: int = 0, limit: int = 10) -> List[ModelType]:
         """
         Fetch all objects of the associated model from the database.
 
@@ -73,7 +73,7 @@ class Repository(Generic[ModelType]):
         Returns:
             List[ModelType]: List of fetched objects.
         """
-        return db.query(self.model).all()
+        return db.query(self.model).offset(offset).limit(limit).all()
 
     def update_one(self, db: Session, item_id: int, **kwargs) -> ModelType:
         """
