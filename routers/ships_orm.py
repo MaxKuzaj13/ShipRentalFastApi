@@ -11,14 +11,6 @@ from schemas.ships import SpaceshipSchemaReceived, SpaceshipSchemaStored
 router = APIRouter(prefix='/spaceships', tags=['spaceships'])
 
 
-@router.get("/{spaceship_id}", response_model=SpaceshipSchemaStored, status_code=200)
-async def get(spaceship_id: int, db: Session = Depends(get_db)):
-    ships = ship_repo.fetch_one(db=db, item_id=spaceship_id)
-    if not ships:
-        raise HTTPException(status_code=404, detail="Spaceship not found")
-    return ships
-
-
 @router.post("/", response_model=SpaceshipSchemaStored, status_code=201)
 async def add(spaceship: SpaceshipSchemaReceived, db: Session = Depends(get_db)):
     ship = ship_repo.create(
@@ -34,10 +26,10 @@ async def add(spaceship: SpaceshipSchemaReceived, db: Session = Depends(get_db))
 
 @router.get("/", response_model=List[SpaceshipSchemaStored], status_code=200)
 async def get_all_spaceships(
-    db: Session = Depends(get_db),
-    page: int = Query(1, ge=1, description="Page number for pagination"),
-    limit: int = Query(10, le=10000, description="Number of items per page")
-    ):
+        db: Session = Depends(get_db),
+        page: int = Query(1, ge=1, description="Page number for pagination"),
+        limit: int = Query(10, le=10000, description="Number of items per page")
+):
     """
     Endpoint to list all spaceships with pagination and offset support.
 
@@ -55,6 +47,13 @@ async def get_all_spaceships(
         raise HTTPException(status_code=404, detail="Spaceships not found")
     return spaceships
 
+
+@router.get("/{spaceship_id}", response_model=SpaceshipSchemaStored, status_code=200)
+async def get(spaceship_id: int, db: Session = Depends(get_db)):
+    ships = ship_repo.fetch_one(db=db, item_id=spaceship_id)
+    if not ships:
+        raise HTTPException(status_code=404, detail="Spaceship not found")
+    return ships
 
 
 @router.put("/{spaceship_id}", response_model=SpaceshipSchemaStored)

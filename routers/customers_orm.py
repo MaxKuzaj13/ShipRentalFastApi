@@ -11,16 +11,18 @@ from schemas.customers import CustomerSchemaReceived, CustomerSchemaStored
 router = APIRouter(prefix='/customers', tags=['customers'])
 
 
-@router.get("/{customers_id}", response_model=CustomerSchemaStored, status_code=200)
-async def get_customer(customers_id: int, db: Session = Depends(get_db)):
-    customer_data = customers_repo.fetch_one(db=db, item_id=customers_id)
-    if not customer_data:
-        raise HTTPException(status_code=404, detail="Customer not found")
-    return customer_data
-
-
 @router.post("/", response_model=CustomerSchemaStored, status_code=201)
 async def create_customer(customer: CustomerSchemaReceived, db: Session = Depends(get_db)):
+    """
+    Endpoint to create a new customer.
+
+    Args:
+        customer (CustomerSchemaReceived): Customer data to be created.
+        db (Session, optional): Database session. Defaults to Depends(get_db).
+
+    Returns:
+        CustomerSchemaStored: Newly created customer.
+    """
     new_customer = customers_repo.create(
         db=db,
         name=customer.name,
@@ -32,10 +34,10 @@ async def create_customer(customer: CustomerSchemaReceived, db: Session = Depend
 
 @router.get("/", response_model=List[CustomerSchemaStored], status_code=200)
 async def list_customers(
-    db: Session = Depends(get_db),
-    page: int = Query(1, ge=1, description="Page number for pagination"),
-    limit: int = Query(10, le=10000, description="Number of items per page")
-    ):
+        db: Session = Depends(get_db),
+        page: int = Query(1, ge=1, description="Page number for pagination"),
+        limit: int = Query(10, le=10000, description="Number of items per page")
+):
     """
     Endpoint to list all customers with pagination and offset support.
 
@@ -54,8 +56,37 @@ async def list_customers(
     return customers
 
 
+@router.get("/{customer_id}", response_model=CustomerSchemaStored, status_code=200)
+async def get_customer(customer_id: int, db: Session = Depends(get_db)):
+    """
+    Endpoint to get details of a specific customer by ID.
+
+    Args:
+        customer_id (int): ID of the customer.
+        db (Session, optional): Database session. Defaults to Depends(get_db).
+
+    Returns:
+        CustomerSchemaStored: Details of the customer.
+    """
+    customer_data = customers_repo.fetch_one(db=db, item_id=customer_id)
+    if not customer_data:
+        raise HTTPException(status_code=404, detail="Customer not found")
+    return customer_data
+
+
 @router.put("/{customer_id}", response_model=CustomerSchemaStored)
 async def update_customer(customer_id: int, customer: CustomerSchemaReceived, db: Session = Depends(get_db)):
+    """
+    Endpoint to update details of an existing customer.
+
+    Args:
+        customer_id (int): ID of the customer to be updated.
+        customer (CustomerSchemaReceived): Updated customer data.
+        db (Session, optional): Database session. Defaults to Depends(get_db).
+
+    Returns:
+        CustomerSchemaStored: Updated customer details.
+    """
     updated_customer = customers_repo.update_one(db=db, item_id=customer_id, **jsonable_encoder(customer))
     if not updated_customer:
         raise HTTPException(status_code=404, detail="Customer not found")
@@ -64,6 +95,16 @@ async def update_customer(customer_id: int, customer: CustomerSchemaReceived, db
 
 @router.delete("/{customer_id}", response_model=None)
 async def delete_customer(customer_id: int, db: Session = Depends(get_db)):
+    """
+    Endpoint to delete a customer.
+
+    Args:
+        customer_id (int): ID of the customer to be deleted.
+        db (Session, optional): Database session. Defaults to Depends(get_db).
+
+    Returns:
+        None
+    """
     deleted_customer = customers_repo.delete_one(db=db, item_id=customer_id)
     if not deleted_customer:
         raise HTTPException(status_code=404, detail="Customer not found")
