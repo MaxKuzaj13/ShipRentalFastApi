@@ -1,6 +1,6 @@
 from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 
@@ -33,11 +33,28 @@ async def add(spaceship: SpaceshipSchemaReceived, db: Session = Depends(get_db))
 
 
 @router.get("/", response_model=List[SpaceshipSchemaStored], status_code=200)
-async def get_all(db: Session = Depends(get_db)):
-    ships = ship_repo.fetch_all(db=db)
-    if not ships:
-        raise HTTPException(status_code=404, detail="Spaceship not found")
-    return ships
+async def get_all_spaceships(
+    db: Session = Depends(get_db),
+    page: int = Query(1, ge=1, description="Page number for pagination"),
+    limit: int = Query(10, le=10000, description="Number of items per page")
+    ):
+    """
+    Endpoint to list all spaceships with pagination and offset support.
+
+    Args:
+        db (Session, optional): Database session. Defaults to Depends(get_db).
+        page (int, optional): Page number for pagination. Defaults to 1.
+        limit (int, optional): Number of items per page. Defaults to 10.
+
+    Returns:
+        List[SpaceshipSchemaStored]: List of spaceships.
+    """
+    offset = (page - 1) * limit
+    spaceships = ship_repo.fetch_all(db=db, offset=offset, limit=limit)
+    if not spaceships:
+        raise HTTPException(status_code=404, detail="Spaceships not found")
+    return spaceships
+
 
 
 @router.put("/{spaceship_id}", response_model=SpaceshipSchemaStored)
