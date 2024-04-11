@@ -13,6 +13,16 @@ router = APIRouter(prefix='/spaceships', tags=['spaceships'])
 
 @router.post("/", response_model=SpaceshipSchemaStored, status_code=201)
 async def add(spaceship: SpaceshipSchemaReceived, db: Session = Depends(get_db)):
+    """
+    Endpoint to add a new spaceship.
+
+    Args:
+        spaceship (SpaceshipSchemaReceived): Spaceship data to be added.
+        db (Session, optional): Database session. Defaults to Depends(get_db).
+
+    Returns:
+        SpaceshipSchemaStored: Newly added spaceship.
+    """
     ship = ship_repo.create(
         db=db,
         name=spaceship.name,
@@ -50,6 +60,16 @@ async def get_all_spaceships(
 
 @router.get("/{spaceship_id}", response_model=SpaceshipSchemaStored, status_code=200)
 async def get(spaceship_id: int, db: Session = Depends(get_db)):
+    """
+    Endpoint to get details of a specific spaceship by ID.
+
+    Args:
+        spaceship_id (int): ID of the spaceship.
+        db (Session, optional): Database session. Defaults to Depends(get_db).
+
+    Returns:
+        SpaceshipSchemaStored: Details of the spaceship.
+    """
     ships = ship_repo.fetch_one(db=db, item_id=spaceship_id)
     if not ships:
         raise HTTPException(status_code=404, detail="Spaceship not found")
@@ -58,6 +78,17 @@ async def get(spaceship_id: int, db: Session = Depends(get_db)):
 
 @router.put("/{spaceship_id}", response_model=SpaceshipSchemaStored)
 async def update_one_spaceship(spaceship_id: int, spaceship: SpaceshipSchemaReceived, db: Session = Depends(get_db)):
+    """
+    Endpoint to update details of an existing spaceship.
+
+    Args:
+        spaceship_id (int): ID of the spaceship to be updated.
+        spaceship (SpaceshipSchemaReceived): Updated spaceship data.
+        db (Session, optional): Database session. Defaults to Depends(get_db).
+
+    Returns:
+        SpaceshipSchemaStored: Updated spaceship details.
+    """
     ships = ship_repo.update_one(db=db, item_id=spaceship_id, **jsonable_encoder(spaceship))
     if not ships:
         raise HTTPException(status_code=404, detail="Spaceship not found")
@@ -66,6 +97,16 @@ async def update_one_spaceship(spaceship_id: int, spaceship: SpaceshipSchemaRece
 
 @router.delete("/{spaceship_id}", response_model=SpaceshipSchemaStored)
 async def delete_spaceship(spaceship_id: int, db: Session = Depends(get_db)):
+    """
+    Endpoint to delete a spaceship.
+
+    Args:
+        spaceship_id (int): ID of the spaceship to be deleted.
+        db (Session, optional): Database session. Defaults to Depends(get_db).
+
+    Returns:
+        SpaceshipSchemaStored: Details of the deleted spaceship.
+    """
     ship_deleted = ship_repo.delete_one(db, spaceship_id)
     if not ship_deleted:
         raise HTTPException(status_code=404, detail="Spaceship not found")
