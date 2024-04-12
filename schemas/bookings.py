@@ -26,6 +26,15 @@ class BookingsSchemaReceived(BaseModel):
         return validate_dates(cls, values)
     class Config:
         from_attributes = True
+        json_schema_extra = {
+            "example": {
+                    "spaceship_id": 1,
+                    "customer_id": 2,
+                    "date_start": "2024-04-08T10:00:00",
+                    "date_end": "2024-04-09T10:00:00"
+                }
+
+        }
 
 
 class BookingsSchemaStored(BaseModel):
@@ -38,3 +47,13 @@ class BookingsSchemaStored(BaseModel):
     # Root validator skipped it is checked on receiving stage
     class Config:
         from_attributes = True
+        json_schema_extra = {
+            "example": {
+                    "id": 12,
+                    "spaceship_id": 1,
+                    "customer_id": 2,
+                    "date_start": "2024-04-08T10:00:00",
+                    "date_end": "2024-04-09T10:00:00"
+                }
+
+        }

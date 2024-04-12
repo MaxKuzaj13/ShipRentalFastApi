@@ -25,6 +25,14 @@ class CustomerSchemaReceived(BaseModel):
 
     class Config:
         from_attributes = True
+        json_schema_extra = {
+            "example": {
+                    "name": "Kora Jackowska",
+                    "address": "Plac Zbawiciela 2, Kraków",
+                    "document_number": "ABS123456"
+                }
+
+        }
 
 
 class CustomerSchemaStored(BaseModel):
@@ -37,3 +45,12 @@ class CustomerSchemaStored(BaseModel):
 
     class Config:
         from_attributes = True
+        json_schema_extra = {
+            "example": {
+                    "id": 5,
+                    "name": "Kora Jackowska",
+                    "address": "Plac Zbawiciela 2, Kraków",
+                    "document_number": "ABS123456"
+            }
+
+        }
