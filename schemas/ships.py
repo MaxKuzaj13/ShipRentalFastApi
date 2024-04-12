@@ -10,6 +10,16 @@ class SpaceshipSchemaReceived(BaseModel):
 
     class Config:
         from_attributes = True
+        json_schema_extra = {
+            "example": {
+                "name": "B-wing",
+                "price_per_hour": 600.0,
+                "available": True,
+                "max_speed": 900,
+                "max_range": 250
+            }
+
+        }
 
 
 class SpaceshipSchemaStored(BaseModel):
@@ -22,3 +32,17 @@ class SpaceshipSchemaStored(BaseModel):
 
     class Config:
         from_attributes = True
+
+        class Config:
+            from_attributes = True
+            json_schema_extra = {
+                "example": {
+                    "id":12,
+                    "name": "B-wing",
+                    "price_per_hour": 600.0,
+                    "available": True,
+                    "max_speed": 900,
+                    "max_range": 250
+                }
+
+            }
