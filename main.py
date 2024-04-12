@@ -1,19 +1,19 @@
-from fastapi import FastAPI, Request, APIRouter, Response
-from routers import ships_orm, customers_orm, bookings_orm, attachments
+from fastapi import FastAPI, Request, Response
+from sqlalchemy.orm import sessionmaker
 
 from db import engine
-from sqlalchemy.orm import sessionmaker
+from routers import ships_orm, customers_orm, bookings_orm, attachments
 
 app = FastAPI()
 
 SessionLocal = sessionmaker(autoflush=False, autocommit=False, bind=engine)
-
 
 # Include routers from ships, customers, bookings
 app.include_router(ships_orm.router)
 app.include_router(customers_orm.router)
 app.include_router(bookings_orm.router)
 app.include_router(attachments.router)
+
 
 @app.middleware("http")
 async def db_session_middleware(request: Request, call_next):
@@ -33,8 +33,6 @@ async def db_session_middleware(request: Request, call_next):
     try:
         request.state.db = SessionLocal()
         response = await call_next(request)
-    # except Exception as e:
-    #     response = Response(f"Not implemented: {e}", status_code=501)
     finally:
         request.state.db.close()
     return response
