@@ -57,7 +57,7 @@ uvicorn main:app --reload
 
 ## Contributing
 
-Contributions are welcome! If you find any issues or have suggestions for improvements, please open an issue, create ticket in [ClickUp](https://sharing.clickup.com/9015557545/b/h/6-901504164692-2/bdb3443a77bb105). or submit a pull request.
+Contributions are welcome! Before starting, please review the CONTRIBUTING.md file. If you find any issues or have suggestions for improvements, please open an issue, create ticket in [ClickUp](https://sharing.clickup.com/9015557545/b/h/6-901504164692-2/bdb3443a77bb105) or submit a pull request.
 
 ### License
 
