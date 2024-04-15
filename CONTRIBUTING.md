@@ -10,7 +10,23 @@ Thank you for your interest in our project! We would like to encourage you to co
 5. Await review and possible suggestions from the project team
    
 ## Code Style
-Before getting started, it's worth familiarizing yourself with our code style guidelines (PEP8) and:
+Before getting started, it's worth familiarizing yourself with our code style guidelines (PEP8) and we try to implement Twelve-Factor App:
+
+These are the 12 rules that can significantly enhance the quality and scalability of your application:
+
+1. Codebase: Maintain only one codebase repository.
+2. Dependencies: Utilize a requirements.txt file or package manager (e.g., pip) for managing dependencies.
+3. Configuration: Store configuration settings separately, such as in a .env file.
+4. Backing Services: Ensure all components are replaceable, such as using an ORM for database abstraction.
+5. Build, Release, Run: Keep the process streamlined without requiring additional steps.
+6. Processes: Python isn't fully equipped for this, but processes should be independent for horizontal scaling.
+7. Port Binding: The application should bind to ports for communication.
+8. Concurrency: Enable both vertical and horizontal scaling to manage concurrency effectively.
+9. Disposability: Enable quick start-up and shut-down processes for easy scaling.
+10. Development/Production Parity: Maintain identical environments across all stages.
+11. Logs: Emit logs to standard output for efficient monitoring.
+12. Admin Processes: Store all administrative scripts within the repository for consistency.
+
 
 ### Use clean and understandable code
 Maintain consistency with existing code in the project

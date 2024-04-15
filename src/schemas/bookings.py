@@ -2,39 +2,32 @@ from pydantic import BaseModel, PositiveInt, root_validator
 from datetime import datetime
 
 
-def validate_dates(cls, values):
-    """
-    Root validator is used to check all fields of the model.
-    :param values: object
-    :return: values: object
-    """
-    if "date_start" in values and "date_end" in values and values["date_end"] < values["date_start"]:
-        raise ValueError("date_end should be greater than date_start")
-    return values
-
 class BookingsSchemaReceived(BaseModel):
     spaceship_id: PositiveInt
     customer_id: PositiveInt
     date_start: datetime
     date_end: datetime
 
-    @root_validator(pre=True)
-    def validate(cls, values):
+    @root_validator(skip_on_failure=True)
+    def validate_dates(cls, values):
         """
-        Root validator is used to check all fields of the model.
-        :param values: object
-        :return: values: object
+        Root validator to check the order of date_start and date_end.
         """
-        return validate_dates(cls, values)
+        date_start = values.get("date_start")
+        date_end = values.get("date_end")
+        if date_start and date_end and date_end < date_start:
+            raise ValueError("date_end should be greater than or equal to date_start")
+        return values
+
     class Config:
         from_attributes = True
         json_schema_extra = {
             "example": {
-                    "spaceship_id": 1,
-                    "customer_id": 2,
-                    "date_start": "2024-04-08T10:00:00",
-                    "date_end": "2024-04-09T10:00:00"
-                }
+                "spaceship_id": 1,
+                "customer_id": 2,
+                "date_start": "2024-04-08T10:00:00",
+                "date_end": "2024-04-09T10:00:00"
+            }
 
         }
 
@@ -51,11 +44,11 @@ class BookingsSchemaStored(BaseModel):
         from_attributes = True
         json_schema_extra = {
             "example": {
-                    "id": 12,
-                    "spaceship_id": 1,
-                    "customer_id": 2,
-                    "date_start": "2024-04-08T10:00:00",
-                    "date_end": "2024-04-09T10:00:00"
-                }
+                "id": 12,
+                "spaceship_id": 1,
+                "customer_id": 2,
+                "date_start": "2024-04-08T10:00:00",
+                "date_end": "2024-04-09T10:00:00"
+            }
 
         }
