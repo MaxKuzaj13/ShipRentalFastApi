@@ -1,0 +1,9 @@
+alembic==1.13.1
+fastapi==0.110.1
+greenlet==3.0.3
+psycopg2-binary==2.9.9
+pydantic==2.5.3
+SQLAlchemy==2.0.29
+starlette==0.37.2
+uvicorn==0.20.0
+python-multipart==0.0.9
