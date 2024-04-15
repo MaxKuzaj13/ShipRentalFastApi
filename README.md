@@ -80,13 +80,11 @@ This project is licensed under the [MIT License](LICENSE).
     ```shell
    sqlalchemy.url = postgresql://user:password@localhost:6543/db
     ```
-2. Add models to alembic (in alembic folder env.py file you have to modify env.py)
-In my case it will be change from: `target_metadata = None` to:
-
-    `import models `
-
-    `target_metadata = models.Base.metadata`
-
+2. Add models to Alembic by modifying the env.py file located in the Alembic folder. Inside the env.py file, include the following code snippet:
+   ``` 
+   config.set_main_option('sqlalchemy.url', get_connection_string())
+   ```
+   Additionally, create a function named get_connection_string() or something similar within the env.py file to generate the SQLAlchemy connection string.
 
 3. Create First migration. To create firs use command 
 ```shell   
@@ -99,3 +97,9 @@ after that you can make migration using command
 alembic upgrade head
 ```
 4. If you have any change of schema you need make revision and upgrade like on previous point 
+
+
+## Docker
+
+1. To start project in docker use docker-compose up 
+2. To check containers use docker ps
