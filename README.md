@@ -1,5 +1,4 @@
 # Starship Rental Service with FastApi
-Fast API application to rent starship
 
 This is a FastAPI application for renting starships.
 
@@ -101,5 +100,8 @@ alembic upgrade head
 
 ## Docker
 
-1. To start project in docker use docker-compose up 
-2. To check containers use docker ps
+1. To start project in docker use `docker-compose up`
+2. To check containers use `docker ps`
+3. To create and push it to Dockerhub use command `docker tag shiprentalfastapi-app max997/ship_rental_fast_api:0.1` you can change revision changing last number. After that use to push `docker push max997/ship_rental_fast_api:0.1`.
+4. To check it on desktop you can visit: https://hub.docker.com/repository/docker/max997/ship_rental_fast_api/general
+![Dockerhub.png](img%2FDockerhub.png)
