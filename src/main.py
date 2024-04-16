@@ -2,7 +2,7 @@ from fastapi import FastAPI, Request, Response
 from sqlalchemy.orm import sessionmaker
 
 from db import engine
-from routers import ships_orm, customers_orm, bookings_orm, attachments
+from routers import ships_orm, customers_orm, bookings_orm, attachments, users_orm
 
 app = FastAPI()
 
@@ -13,6 +13,7 @@ app.include_router(ships_orm.router)
 app.include_router(customers_orm.router)
 app.include_router(bookings_orm.router)
 app.include_router(attachments.router)
+app.include_router(users_orm.router)
 
 
 @app.middleware("http")

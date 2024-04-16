@@ -26,6 +26,7 @@ class Booking(Base):
     date_end = Column(DateTime)
     # need have from_attributes as True in schemas
 
+
 class Customer(Base):
     __tablename__ = 'customers'
 
@@ -33,4 +34,16 @@ class Customer(Base):
     name = Column(String)
     address = Column(String)
     document_number = Column(String)
+    # need have from_attributes as True in schemas
+
+
+class User(Base):
+    __tablename__ = 'users'
+
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String)
+    hashed_password = Column(String)
+    full_name = Column(String)
+    email = Column(String)
+    active_user = Column(Boolean)
     # need have from_attributes as True in schemas
