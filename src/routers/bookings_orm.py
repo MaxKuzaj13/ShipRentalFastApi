@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 
 from db import get_db
 from repositories.bookings import booking_repo
+from repositories.users import user_repo
 from schemas.bookings import BookingsSchemaReceived, BookingsSchemaStored
 
 router = APIRouter(prefix='/bookings', tags=['bookings'])
@@ -25,8 +26,8 @@ async def create_bookings(bookings: BookingsSchemaReceived, db: Session = Depend
     """
     new_booking = booking_repo.create(
         db=db,
-        spaceship_id=bookings.spaceship_id,
-        customer_id=bookings.customer_id,
+        ship_id=bookings.ship_id,
+        user_id=bookings.user_id,
         date_start=bookings.date_start,
         date_end=bookings.date_end,
     )
@@ -111,3 +112,9 @@ async def delete_bookings(booking_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Booking not found")
     return booking_deleted
 
+
+@router.post("/{user_id}/user", response_model=BookingsSchemaStored, status_code=201)
+async def add_bookings_by_user(bookings: BookingsSchemaReceived, user_id: int, db: Session = Depends(get_db)):
+    user = user_repo.fetch_one(db, user_id)
+    booking = user_repo.create_booking_by_user(db, user, bookings)
+    return booking
