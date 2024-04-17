@@ -105,3 +105,9 @@ alembic upgrade head
 3. To create and push it to Dockerhub use command `docker tag shiprentalfastapi-app max997/ship_rental_fast_api:0.1` you can change revision changing last number. After that use to push `docker push max997/ship_rental_fast_api:0.1`.
 4. To check it on desktop you can visit: https://hub.docker.com/repository/docker/max997/ship_rental_fast_api/general
 ![Dockerhub.png](img%2FDockerhub.png)
+
+## Authentication
+
+1. The login and password come from the form data.
+2. If the password is incorrect, an exception will be returned.
+3. If the password is OK, a token valid for 30 minutes will be returned.

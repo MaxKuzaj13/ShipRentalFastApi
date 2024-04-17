@@ -6,6 +6,8 @@ from sqlalchemy import pool
 
 from alembic import context
 
+import models
+
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
@@ -19,8 +21,9 @@ if config.config_file_name is not None:
 # add your model's MetaData object here
 # for 'autogenerate' support
 
-# target_metadata = models.Base.metadata
+target_metadata = models.Base.metadata
 # target_metadata = None
+
 
 def get_connection_string():
     db_database = environ.get("POSTGRES_DB")
