@@ -27,6 +27,13 @@ class UserRepository(Repository):
         return db.query(User).filter((User.username == identifier) | (User.email == identifier)).first()
 
     @staticmethod
+    def check_if_username_or_password_exist(db: Session, username: str, type_str: str):
+        user_model = User
+        column_to_query = getattr(user_model, type_str)
+        unique_value = set(username[0] for username in db.query(column_to_query).all())
+        return username in unique_value
+
+    @staticmethod
     def create_booking_by_user(db: Session, user_model: User, booking: Booking) -> Booking:
         """
         Creates a booking for a given user.

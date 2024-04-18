@@ -137,6 +137,15 @@ async def create_user(user: UserSchemaReceived, db: Session = Depends(get_db)):
         UserSchemaStored: Newly created user.
     """
     hashed_password = get_password_hashed(user.password)
+    user_exist = user_repo.check_if_username_or_password_exist(db, user.username, type_str='username')
+
+    if user_exist:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Username already exists",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
     new_user = user_repo.create(
         db=db,
         username=user.username,

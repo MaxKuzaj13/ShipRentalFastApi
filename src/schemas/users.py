@@ -1,34 +1,38 @@
-from pydantic import BaseModel, Field, PositiveInt
+from pydantic import BaseModel, Field, PositiveInt, validator
+from validate_email_address import validate_email
 
 
 class UserSchemaReceived(BaseModel):
-    # TODO ADD validator unique user and unique password
-    username: str = Field(min_length=5, max_length=255)
+    username: str = Field(min_length=4, max_length=255)
     email: str = Field(min_length=5, max_length=255)
     full_name: str = Field(min_length=5, max_length=255)
     password: str = Field(min_length=5, max_length=255)
 
+    @validator("email")
+    def validate_email(cls, email):
+        if not validate_email(email):
+            raise ValueError("Invalid email format")
+        return email
     class Config:
         from_attributes = True
         json_schema_extra = {
             "example": {
-                    "username": "Kora",
-                    "email": "kora.jackowska1@gmail.com",
-                    "full_name": "Kora Jackowska",
-                    "password": "Admin123!",
-                }
+                "username": "Kora",
+                "email": "kora.jackowska1@gmail.com",
+                "full_name": "Kora Jackowska",
+                "password": "Admin123!",
+            }
 
         }
 
 
 class UserSchemaStored(BaseModel):
     id: PositiveInt
-    username: str = Field(min_length=5, max_length=255)
+    username: str = Field(min_length=4, max_length=255)
     email: str = Field(min_length=5, max_length=255)
     full_name: str = Field(min_length=5, max_length=255)
     active_user: bool
     hashed_password: str = Field(min_length=5, max_length=255)
-
 
     # Validator skipped it is checked on receiving stage
 
