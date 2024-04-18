@@ -50,7 +50,7 @@ class UserRepository(Repository):
         return new_booking
 
     @staticmethod
-    def get_user_bookings(db: Session, user_id: int) -> List[Booking]:
+    def get_user_bookings(db: Session, user_id: int):
         """
         Retrieves all bookings associated with a given user.
 
@@ -59,12 +59,12 @@ class UserRepository(Repository):
         :param user_id: ID of the user
         :type user_id: int
         :return: List of user's bookings
-        :rtype: List[Booking]
+        :rtype:
         """
         return (
-            db.query(Booking)
-            .join(Booking.ship)
-            .join(Booking.user)
+            db.query(Booking, Ship, User)
+            .join(Ship, Booking.ship_id == Ship.id)
+            .join(User, Booking.user_id == User.id)
             .filter(Booking.user_id == user_id)
             .all()
         )

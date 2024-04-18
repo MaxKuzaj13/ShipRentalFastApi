@@ -52,3 +52,26 @@ class BookingsSchemaStored(BaseModel):
             }
 
         }
+
+
+class BookingDetails(BaseModel):
+    date_start: datetime
+    date_end: datetime
+    ship_id: int
+    name: str
+    user_id: int
+    username: str
+
+    class Config:
+        from_attributes = True
+        json_schema_extra = {
+            "example": {
+                "date_start": "2024-04-08T10:00:00",
+                "date_end": "2024-04-08T10:00:00",
+                "ship_id": 1,
+                "name": "B-wing",
+                "user_id": 1,
+                "username": "kora"
+            }
+
+        }

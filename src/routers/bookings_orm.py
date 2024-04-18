@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from db import get_db
 from repositories.bookings import booking_repo
 from repositories.users import user_repo
-from schemas.bookings import BookingsSchemaReceived, BookingsSchemaStored
+from schemas.bookings import BookingsSchemaReceived, BookingsSchemaStored, BookingDetails
 
 router = APIRouter(prefix='/bookings', tags=['bookings'])
 
@@ -114,12 +114,12 @@ async def delete_bookings(booking_id: int, db: Session = Depends(get_db)):
 
 
 @router.post("/{user_id}/user", response_model=BookingsSchemaStored, status_code=201)
-async def add_bookings_by_user(bookings: BookingsSchemaReceived, user_id: int, db: Session = Depends(get_db)):
+async def add_bookings_by_user(schema_bookings: BookingsSchemaReceived, user_id: int, db: Session = Depends(get_db)):
     """
     Endpoint to add bookings for a specific user.
 
     Args:
-        bookings (BookingsSchemaReceived): Booking details to be added.
+        schema_bookings (BookingsSchemaReceived): Booking details to be added.
         user_id (int): ID of the user for whom bookings are being added.
         db (Session, optional): Database session. Defaults to Depends(get_db).
 
@@ -127,11 +127,11 @@ async def add_bookings_by_user(bookings: BookingsSchemaReceived, user_id: int, d
         BookingsSchemaStored: Newly added booking details.
     """
     user = user_repo.fetch_one(db, user_id)
-    booking = user_repo.create_booking_by_user(db, user, bookings)
+    booking = user_repo.create_booking_by_user(db, user, schema_bookings)
     return booking
 
 
-@router.get("/{user_id}/bookings", response_model=List[BookingsSchemaStored])
+@router.get("/{user_id}/bookings", response_model=List[BookingDetails])
 async def get_bookings(user_id: int, db: Session = Depends(get_db)):
     """
     Retrieves all bookings associated with a given user.
@@ -141,6 +141,14 @@ async def get_bookings(user_id: int, db: Session = Depends(get_db)):
         db (Session, optional): Database session. Defaults to Depends(get_db).
 
     Returns:
-        List[Booking]: List of user's bookings.
+        List[BookingDetails]: List of user's bookings.
     """
-    return user_repo.get_user_bookings(db, user_id)
+    # Generator expression
+    return ({
+        "date_start": booking.date_start,
+        "date_end": booking.date_start,
+        "ship_id": ship.id,
+        "name": ship.name,
+        "user_id": user_id,
+        "username": user.username
+    } for booking, ship, user in user_repo.get_user_bookings(db, user_id))
