@@ -21,8 +21,9 @@ pwd_context = CryptContext(schemes=['bcrypt'], deprecated="auto")
 
 # get env from file
 SECRET_KEY = os.getenv("SECRET_KEY", "TEST")
-ALGORITHM = os.getenv("ALGORITHM")
+ALGORITHM = os.getenv("ALGORITHM", "HS256")
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 30))
+
 
 def verify_password(plain_password, hashed_password):
     """
@@ -145,3 +146,4 @@ async def create_user(user: UserSchemaReceived, db: Session = Depends(get_db)):
         active_user=True,
     )
     return new_user
+

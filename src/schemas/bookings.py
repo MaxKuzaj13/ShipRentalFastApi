@@ -3,8 +3,8 @@ from datetime import datetime
 
 
 class BookingsSchemaReceived(BaseModel):
-    spaceship_id: PositiveInt
-    customer_id: PositiveInt
+    ship_id: PositiveInt
+    user_id: PositiveInt
     date_start: datetime
     date_end: datetime
 
@@ -23,8 +23,8 @@ class BookingsSchemaReceived(BaseModel):
         from_attributes = True
         json_schema_extra = {
             "example": {
-                "spaceship_id": 1,
-                "customer_id": 2,
+                "ship_id": 1,
+                "user_id": 2,
                 "date_start": "2024-04-08T10:00:00",
                 "date_end": "2024-04-09T10:00:00"
             }
@@ -34,8 +34,8 @@ class BookingsSchemaReceived(BaseModel):
 
 class BookingsSchemaStored(BaseModel):
     id: PositiveInt
-    spaceship_id: PositiveInt
-    customer_id: PositiveInt
+    ship_id: PositiveInt
+    user_id: PositiveInt
     date_start: datetime
     date_end: datetime
 
@@ -45,10 +45,33 @@ class BookingsSchemaStored(BaseModel):
         json_schema_extra = {
             "example": {
                 "id": 12,
-                "spaceship_id": 1,
-                "customer_id": 2,
+                "ship_id": 1,
+                "user_id": 2,
                 "date_start": "2024-04-08T10:00:00",
                 "date_end": "2024-04-09T10:00:00"
+            }
+
+        }
+
+
+class BookingDetails(BaseModel):
+    date_start: datetime
+    date_end: datetime
+    ship_id: int
+    name: str
+    user_id: int
+    username: str
+
+    class Config:
+        from_attributes = True
+        json_schema_extra = {
+            "example": {
+                "date_start": "2024-04-08T10:00:00",
+                "date_end": "2024-04-08T10:00:00",
+                "ship_id": 1,
+                "name": "B-wing",
+                "user_id": 1,
+                "username": "kora"
             }
 
         }

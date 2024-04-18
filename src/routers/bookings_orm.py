@@ -6,7 +6,8 @@ from sqlalchemy.orm import Session
 
 from db import get_db
 from repositories.bookings import booking_repo
-from schemas.bookings import BookingsSchemaReceived, BookingsSchemaStored
+from repositories.users import user_repo
+from schemas.bookings import BookingsSchemaReceived, BookingsSchemaStored, BookingDetails
 
 router = APIRouter(prefix='/bookings', tags=['bookings'])
 
@@ -25,8 +26,8 @@ async def create_bookings(bookings: BookingsSchemaReceived, db: Session = Depend
     """
     new_booking = booking_repo.create(
         db=db,
-        spaceship_id=bookings.spaceship_id,
-        customer_id=bookings.customer_id,
+        ship_id=bookings.ship_id,
+        user_id=bookings.user_id,
         date_start=bookings.date_start,
         date_end=bookings.date_end,
     )
@@ -111,3 +112,43 @@ async def delete_bookings(booking_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Booking not found")
     return booking_deleted
 
+
+@router.post("/{user_id}/user", response_model=BookingsSchemaStored, status_code=201)
+async def add_bookings_by_user(schema_bookings: BookingsSchemaReceived, user_id: int, db: Session = Depends(get_db)):
+    """
+    Endpoint to add bookings for a specific user.
+
+    Args:
+        schema_bookings (BookingsSchemaReceived): Booking details to be added.
+        user_id (int): ID of the user for whom bookings are being added.
+        db (Session, optional): Database session. Defaults to Depends(get_db).
+
+    Returns:
+        BookingsSchemaStored: Newly added booking details.
+    """
+    user = user_repo.fetch_one(db, user_id)
+    booking = user_repo.create_booking_by_user(db, user, schema_bookings)
+    return booking
+
+
+@router.get("/{user_id}/bookings", response_model=List[BookingDetails])
+async def get_bookings(user_id: int, db: Session = Depends(get_db)):
+    """
+    Retrieves all bookings associated with a given user.
+
+    Args:
+        user_id (int): ID of the user.
+        db (Session, optional): Database session. Defaults to Depends(get_db).
+
+    Returns:
+        List[BookingDetails]: List of user's bookings.
+    """
+    # Generator expression
+    return ({
+        "date_start": booking.date_start,
+        "date_end": booking.date_start,
+        "ship_id": ship.id,
+        "name": ship.name,
+        "user_id": user_id,
+        "username": user.username
+    } for booking, ship, user in user_repo.get_user_bookings(db, user_id))
