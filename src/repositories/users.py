@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from typing import Optional, List
+from typing import Optional, List, Tuple
 
 from models import User, Booking, Ship
 from repositories.common import Repository
@@ -7,6 +7,9 @@ from repositories.common import Repository
 
 class UserRepository(Repository):
     def __init__(self):
+        """
+        Initializes a UserRepository instance.
+        """
         super().__init__(User)
 
     @staticmethod
@@ -14,12 +17,12 @@ class UserRepository(Repository):
         """
         Fetches a user by either username or email.
 
-        :param db: Database session
-        :type db: sqlalchemy.orm.Session
-        :param identifier: Username or email of the user
-        :type identifier: str
-        :return: User object if found, otherwise None
-        :rtype: Optional[User]
+        Args:
+            db (Session): Database session
+            identifier (str): Username or email of the user
+
+        Returns:
+            Optional[User]: User object if found, otherwise None
         """
         return db.query(User).filter((User.username == identifier) | (User.email == identifier)).first()
 
@@ -28,14 +31,13 @@ class UserRepository(Repository):
         """
         Creates a booking for a given user.
 
-        :param db: Database session
-        :type db: sqlalchemy.orm.Session
-        :param user_model: User model
-        :type user_model: User
-        :param booking: Booking details
-        :type booking: Booking
-        :return: Created booking
-        :rtype: Booking
+        Args:
+            db (Session): Database session
+            user_model (User): User model
+            booking (Booking): Booking details
+
+        Returns:
+            Booking: Created booking
         """
         new_booking = Booking(
             ship_id=booking.ship_id,
@@ -50,16 +52,16 @@ class UserRepository(Repository):
         return new_booking
 
     @staticmethod
-    def get_user_bookings(db: Session, user_id: int):
+    def get_user_bookings(db: Session, user_id: int) -> List[Tuple[Booking, Ship, User]]:
         """
         Retrieves all bookings associated with a given user.
 
-        :param db: Database session
-        :type db: sqlalchemy.orm.Session
-        :param user_id: ID of the user
-        :type user_id: int
-        :return: List of user's bookings
-        :rtype:
+        Args:
+            db (Session): Database session
+            user_id (int): ID of the user
+
+        Returns:
+            List[Tuple[Booking, Ship, User]]: List of user's bookings
         """
         return (
             db.query(Booking, Ship, User)

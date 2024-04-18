@@ -11,10 +11,15 @@ class CustomerSchemaReceived(BaseModel):
     @validator('document_number')
     def validate_id_number(cls, id_number: str) -> str:
         """
-        Validator for polish id numbers
-        :param id_number: str
-        :return: str
+        Validator for Polish ID numbers
+
+        Args:
+            id_number (str): The ID number to be validated.
+
+        Returns:
+            str: The validated ID number.
         """
+
         check_numbers = [7, 3, 1, 7, 3, 1, 7, 3]
         values = [int(char) if char.isnumeric() else ascii_uppercase.find(char) + 10 for char in id_number]
         control_number = values.pop(3)
