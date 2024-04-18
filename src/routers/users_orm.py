@@ -11,8 +11,6 @@ from sqlalchemy.orm import Session
 from db import get_db
 from repositories.users import user_repo
 from schemas.users import UserSchemaStored, UserSchemaReceived
-from schemas.bookings import BookingsSchemaStored
-from schemas.ships import SpaceshipSchemaStored
 
 router = APIRouter(
     prefix='/users',
@@ -23,7 +21,7 @@ pwd_context = CryptContext(schemes=['bcrypt'], deprecated="auto")
 
 # get env from file
 SECRET_KEY = os.getenv("SECRET_KEY", "TEST")
-ALGORITHM = os.getenv("ALGORITHM")
+ALGORITHM = os.getenv("ALGORITHM", "HS256")
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 30))
 
 
@@ -149,7 +147,3 @@ async def create_user(user: UserSchemaReceived, db: Session = Depends(get_db)):
     )
     return new_user
 
-
-@router.get("/{user_id}/bookings")#, response_model=BookingsSchemaStored)
-async def get_bookings(user_id: int, db: Session = Depends(get_db)):
-    return user_repo.get_user_bookings(db, user_id)

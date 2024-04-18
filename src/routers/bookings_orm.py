@@ -115,6 +115,32 @@ async def delete_bookings(booking_id: int, db: Session = Depends(get_db)):
 
 @router.post("/{user_id}/user", response_model=BookingsSchemaStored, status_code=201)
 async def add_bookings_by_user(bookings: BookingsSchemaReceived, user_id: int, db: Session = Depends(get_db)):
+    """
+    Endpoint to add bookings for a specific user.
+
+    Args:
+        bookings (BookingsSchemaReceived): Booking details to be added.
+        user_id (int): ID of the user for whom bookings are being added.
+        db (Session, optional): Database session. Defaults to Depends(get_db).
+
+    Returns:
+        BookingsSchemaStored: Newly added booking details.
+    """
     user = user_repo.fetch_one(db, user_id)
     booking = user_repo.create_booking_by_user(db, user, bookings)
     return booking
+
+
+@router.get("/{user_id}/bookings", response_model=List[BookingsSchemaStored])
+async def get_bookings(user_id: int, db: Session = Depends(get_db)):
+    """
+    Retrieves all bookings associated with a given user.
+
+    Args:
+        user_id (int): ID of the user.
+        db (Session, optional): Database session. Defaults to Depends(get_db).
+
+    Returns:
+        List[Booking]: List of user's bookings.
+    """
+    return user_repo.get_user_bookings(db, user_id)

@@ -10,6 +10,7 @@ UPLOAD_FOLDER = "uploads"
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
+
 @router.post("/files", status_code=201)
 async def create_upload_file(file: UploadFile = File(...)):
     """
@@ -32,4 +33,3 @@ async def create_upload_file(file: UploadFile = File(...)):
     except Exception as e:
         # Raise an HTTP 500 server error with details of the error if saving fails
         raise HTTPException(status_code=500, detail=str(e))
-

@@ -12,7 +12,7 @@ class UserSchemaReceived(BaseModel):
         from_attributes = True
         json_schema_extra = {
             "example": {
-                    "username": "Kora Jackowska",
+                    "username": "Kora",
                     "email": "kora.jackowska1@gmail.com",
                     "full_name": "Kora Jackowska",
                     "password": "Admin123!",
@@ -36,7 +36,7 @@ class UserSchemaStored(BaseModel):
         from_attributes = True
         json_schema_extra = {
             "example": {
-                "username": "Kora Jackowska",
+                "username": "Kora",
                 "email": "kora.jackowska1@gmail.com",
                 "full_name": "Kora Jackowska",
                 "active_user": True,
