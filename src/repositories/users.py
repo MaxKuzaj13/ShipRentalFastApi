@@ -34,6 +34,24 @@ class UserRepository(Repository):
         return username in unique_value
 
     @staticmethod
+    def check_word_in_file(provided_password):
+        # TODO change to db table or find some better source or password_strength
+        file_path_password = 'static_file/10k-most-common.txt'
+        try:
+            with open(file_path_password, 'r') as file:
+                # Read the entire content of the file
+                content = file.read()
+                # Check if the word exists in the file content
+                if provided_password.lower() in content:
+                    return True
+                else:
+                    return False
+        except FileNotFoundError:
+            print("File with password not found.")
+            return False
+
+
+    @staticmethod
     def create_booking_by_user(db: Session, user_model: User, booking: Booking) -> Booking:
         """
         Creates a booking for a given user.

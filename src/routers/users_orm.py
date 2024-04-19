@@ -137,22 +137,34 @@ async def create_user(user: UserSchemaReceived, db: Session = Depends(get_db)):
         UserSchemaStored: Newly created user.
     """
     hashed_password = get_password_hashed(user.password)
-    user_exist = user_repo.check_if_username_or_password_exist(db, user.username, type_str='username')
 
-    if user_exist:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Username already exists",
-            headers={"WWW-Authenticate": "Bearer"},
+    if user.password.lower() == user.username.lower():
+        error_message = ["Username same as password", "password", user.password, "Please change username or password"]
+    elif user.password in user.username or user.username in user.password:
+        error_message = ["Password contains username or vice versa", "password", user.password, "Please change username or password"]
+    elif user_repo.check_if_username_or_password_exist(db, user.username, type_str='username'):
+        # Can not be moved to validator it needs db rest should be moved?
+        error_message = ["Username already exists", "username", user.username, "Please change username"]
+    elif user_repo.check_word_in_file(user.password):
+        error_message = ["Password too weak, please change password", "password", user.password, "Please change username or password"]
+    else:
+        new_user = user_repo.create(
+            db=db,
+            username=user.username,
+            hashed_password=hashed_password,
+            full_name=user.full_name,
+            email=user.email,
+            active_user=True,
         )
+        return new_user
 
-    new_user = user_repo.create(
-        db=db,
-        username=user.username,
-        hashed_password=hashed_password,
-        full_name=user.full_name,
-        email=user.email,
-        active_user=True,
+    raise HTTPException(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        detail=[{"type": error_message[0],
+                 "loc": ["body", error_message[1]],
+                 "msg": error_message[0],
+                 "input": error_message[2],
+                 "ctx": error_message[3],
+                 "url": 'https://www.avast.com/pl-pl/random-password-generator'}],
+        headers={"WWW-Authenticate": "Bearer"},
     )
-    return new_user
-
