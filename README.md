@@ -20,10 +20,42 @@ cd ShipRentalFastApi
 ```shell
 pip install -r requirements.txt
 ```
-3. Run the FastAPI application using uvicorn:
+3. Running the FastAPI Application with Docker Compose
+
+3.1 Installation
+Before running the FastAPI application with Docker Compose, ensure that you have Docker Compose installed on your system. You can install Docker Compose by following the instructions provided in the official Docker documentation.
+
+3.2. Docker Configuration Files
+Prepare the necessary Docker configuration files within your project directory. These files typically include the Dockerfile and docker-compose.yaml. The Dockerfile contains instructions for building the Docker image, while the docker-compose.yaml defines the configuration for Docker Compose.
+
+3.3. Building the Docker Image
+To build the Docker image that contains your FastAPI application, use the following command:
 ```shell
-uvicorn main:app --reload
+docker-compose build
 ```
+This command will initiate the image-building process according to the instructions defined in the Dockerfile.
+
+
+
+3.4. Running Containers
+Once the Docker image is built, you can start the Docker containers using the following command:
+
+```shell
+docker-compose up
+```
+Docker Compose will automatically start all services defined in the docker-compose.yaml file.
+
+3.5. Accessing the Application
+After the containers are up and running, your FastAPI application will be accessible at http://localhost:8000. You can test your application by navigating to this location in your web browser or using API testing tools like Postman or curl.
+
+3.6. Stopping Containers
+To stop the Docker containers, press Ctrl + C in the terminal where Docker Compose is running, or use the following command:
+
+
+`   docker-compose down
+`
+This command will gracefully stop and remove the Docker containers.
+
 4. The application will be running at http://127.0.0.1:8000/ by default.
 
 5. Explore the API using Swagger UI at http://127.0.0.1:8000/docs.
@@ -100,10 +132,8 @@ alembic upgrade head
 
 ## Docker
 
-1. To start project in docker use `docker-compose up`
-2. To check containers use `docker ps`
-3. To create and push it to Dockerhub use command `docker tag shiprentalfastapi-app max997/ship_rental_fast_api:0.1` you can change revision changing last number. After that use to push `docker push max997/ship_rental_fast_api:0.1`.
-4. To check it on desktop you can visit: https://hub.docker.com/repository/docker/max997/ship_rental_fast_api/general
+APP is started in docker checout point 3 how to start. You can also get from dockerhub.
+To check it on desktop you can visit: https://hub.docker.com/repository/docker/max997/ship_rental_fast_api/general
 ![Dockerhub.png](img%2FDockerhub.png)
 
 ## Authentication
